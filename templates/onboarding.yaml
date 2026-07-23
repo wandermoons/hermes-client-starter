@@ -1,0 +1,26 @@
+client:
+  owner: pending
+  company: pending
+  website: pending
+
+managed_profiles:
+  dwight:
+    status: pending
+    distribution: hermes-dwight-seo
+    version: unknown
+
+integrations:
+  model: pending
+  web_search: pending
+  wordpress: pending
+  google_search_console: pending
+  dataforseo: pending
+  perplexity: pending
+
+permissions:
+  research: allowed
+  drafting: allowed
+  external_writes: approval_required
+  publication: approval_required
+  deletion: approval_required
+  spending: approval_required

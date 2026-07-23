@@ -1,0 +1,52 @@
+model:
+  default: gpt-5.6-sol
+  provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
+
+toolsets:
+  - hermes-cli
+
+agent:
+  max_turns: 150
+  gateway_timeout: 1800
+  tool_use_enforcement: auto
+  task_completion_guidance: true
+  reasoning_effort: medium
+
+terminal:
+  backend: local
+  cwd: .
+  timeout: 180
+  persistent_shell: true
+
+tool_loop_guardrails:
+  warnings_enabled: true
+  hard_stop_enabled: true
+  hard_stop_after:
+    exact_failure: 5
+    same_tool_failure: 8
+    idempotent_no_progress: 5
+
+compression:
+  enabled: true
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_last_n: 20
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+
+delegation:
+  inherit_mcp_toolsets: true
+  max_iterations: 50
+  max_concurrent_children: 3
+  max_spawn_depth: 1
+  orchestrator_enabled: true
+
+display:
+  language: fr
+  show_reasoning: false
+  streaming: true
+
+timezone: Europe/Paris

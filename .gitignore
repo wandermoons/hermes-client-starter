@@ -1,0 +1,32 @@
+# Secrets and authentication
+.env
+.env.*
+!.env.EXAMPLE
+auth.json
+*.pem
+*.key
+
+# Client-local and runtime data
+local/
+memories/
+sessions/
+logs/
+workspace/
+plans/
+home/
+cache/
+backups/
+state.db*
+processes.json
+gateway*.json
+gateway*.pid
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Temporary files
+*.tmp
+*.bak

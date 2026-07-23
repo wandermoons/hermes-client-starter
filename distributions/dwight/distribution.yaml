@@ -1,0 +1,31 @@
+name: dwight
+version: 0.1.1
+description: "Agent Hermes SEO/GEO, contenu, recherche et opérations WordPress pour entreprises de services"
+hermes_requires: ">=0.12.0"
+author: "Wander Labs"
+license: "Proprietary"
+
+env_requires:
+  - name: PERPLEXITY_API_KEY
+    description: "Clé API Perplexity pour les recherches Sonar"
+    required: false
+  - name: DATAFORSEO_LOGIN
+    description: "Identifiant API DataForSEO"
+    required: false
+  - name: DATAFORSEO_PASSWORD
+    description: "Mot de passe API DataForSEO"
+    required: false
+  - name: CLIENT_WORDPRESS_URL
+    description: "URL du site WordPress du client"
+    required: false
+  - name: CLIENT_WORDPRESS_USER
+    description: "Utilisateur WordPress dédié à Dwight"
+    required: false
+  - name: CLIENT_WORDPRESS_APP_PASSWORD
+    description: "Application Password WordPress dédié à Dwight"
+    required: false
+
+distribution_owned:
+  - SOUL.md
+  - config.yaml
+  - skills/
