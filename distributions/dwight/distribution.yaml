@@ -1,5 +1,5 @@
 name: dwight
-version: 0.1.1
+version: 0.1.2
 description: "Agent Hermes SEO/GEO, contenu, recherche et opérations WordPress pour entreprises de services"
 hermes_requires: ">=0.12.0"
 author: "Wander Labs"
@@ -28,4 +28,13 @@ env_requires:
 distribution_owned:
   - SOUL.md
   - config.yaml
-  - skills/
+  - distribution.yaml
+  - skills/dwight-seo-core/
+  - skills/dwight-research-core/
+  - skills/dwight-seo-market-intelligence/
+  - skills/dwight-seo-performance-audit/
+  - skills/dwight-seo-silo-strategy/
+  - skills/dwight-seo-content-production/
+  - skills/dwight-seo-internal-linking/
+  - skills/dwight-wordpress-safe-operations/
+  - skills/dwight-brand-voice-extraction/
