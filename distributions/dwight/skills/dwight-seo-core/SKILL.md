@@ -1,69 +1,100 @@
 ---
 name: dwight-seo-core
-description: "Workflow générique de Dwight pour stratégie SEO/GEO, recherche, rédaction, audit et opérations WordPress avec intégrations progressives."
-version: 0.1.0
+description: "Use for any Dwight SEO, GEO, content, research or WordPress mission to run preflight, select specialist skills and enforce shared evidence and safety rules."
+version: 0.2.0
 author: Wander Labs
 license: Proprietary
 metadata:
   hermes:
-    tags: [seo, geo, content, wordpress, dataforseo, perplexity]
+    tags: [dwight, seo, geo, routing, quality, safety]
 ---
 
 # Dwight SEO Core
 
-Utilise ce skill pour toute stratégie SEO/GEO, recherche de mots-clés, plan éditorial, article, optimisation, audit ou opération WordPress.
+This is Dwight's routing and quality-control skill. Load it first for every SEO, GEO, editorial, research or WordPress mission, then load only the specialist skills required by the task.
 
-## Préflight
+## Preflight workflow
 
-1. Lire `local/CLIENT.md` et `local/onboarding.yaml` s’ils existent.
-2. Identifier le domaine, l’audience, l’offre, la zone, la langue et l’objectif de conversion.
-3. Vérifier quelles sources sont réellement accessibles.
-4. Définir le livrable et les actions qui nécessitent une validation.
+1. Read `local/CLIENT.md` and `local/onboarding.yaml` when the task depends on brand, site, integrations or permissions.
+2. Confirm objective, audience, market, language and expected deliverable.
+3. Identify available first-party data, external sources and integrations.
+4. Separate analysis/preparation from actions that create cost, persist changes or become public.
+5. Select the smallest relevant specialist set.
 
-## Modes de fonctionnement
+## Skill routing
 
-### Socle sans intégrations
+| Need | Skill |
+|---|---|
+| Current, sourced research | `dwight-research-core` |
+| Keywords, SERP, competitors, ranks, backlinks | `dwight-seo-market-intelligence` |
+| Owned-site Search Console performance | `dwight-seo-performance-audit` |
+| Pillar/satellite architecture and cannibalization | `dwight-seo-silo-strategy` |
+| Brief, article, rewrite and editorial QA | `dwight-seo-content-production` |
+| Internal-link audit or correction | `dwight-seo-internal-linking` |
+| WordPress read, draft, edit or publish | `dwight-wordpress-safe-operations` |
+| Derive a Brand Voice Guide from a site/blog | `dwight-brand-voice-extraction` |
 
-Avec les informations du client et la recherche web disponible, tu peux produire : stratégie initiale, idées, clusters, briefs, articles et recommandations. Indique que les volumes, positions et performances ne sont pas mesurés.
+Combine skills when necessary, for example market intelligence → silo strategy → content production. Do not load unrelated procedures.
 
-### Perplexity disponible
+## Evidence contract
 
-Utilise Perplexity pour la recherche actuelle et les sources, pas comme modèle principal si le modèle ne prend pas en charge les outils. Vérifie un vrai appel avant de déclarer l’intégration prête.
+Always distinguish:
 
-### DataForSEO disponible
+1. client-provided facts;
+2. authorized first-party measurements;
+3. external measured or estimated data;
+4. inspected public sources;
+5. inference and recommendation.
 
-Utilise DataForSEO pour les données externes : SERP, volumes, concurrence, positions et backlinks. Garde Search Console comme source prioritaire pour les clics, impressions et requêtes du site appartenant au client.
+Never invent search volume, ranking, traffic, conversion, citation, quote, API output or completed action. If an integration is missing, state the limit and offer a degraded workflow.
 
-### WordPress disponible
+## Action classes
 
-Teste dans cet ordre : racine REST publique, identité authentifiée, lecture de contenu, puis seulement une écriture explicitement autorisée. Utilise un utilisateur dédié et un Application Password.
+### Free analysis and preparation
 
-## Workflow de contenu
+Dwight may research, analyze, structure, draft locally and recommend within the authorized context.
 
-1. Définir objectif, audience, intention et mot-clé principal.
-2. Rechercher les faits et différencier données mesurées, sources externes et hypothèses.
-3. Analyser le contenu existant et les risques de cannibalisation.
-4. Construire H1, H2/H3, angle, preuves, exemples et conversion.
-5. Rédiger dans la voix du client, sans remplissage SEO.
-6. Préparer title, meta description, slug, FAQ, maillage et alt text.
-7. Effectuer une relecture éditoriale et factuelle.
-8. Soumettre à validation avant toute publication.
+### Validation required
 
-## Workflow d’audit
+Require validation explicite before:
 
-- Commencer par la question commerciale ou le symptôme observé.
-- Comparer des périodes cohérentes lorsque les données le permettent.
-- Séparer technique, contenu, intention, concurrence et saisonnalité.
-- Ne pas attribuer une causalité sans preuve.
-- Prioriser les actions par impact, confiance, effort et réversibilité.
+- any external persistent mutation, including creation of a CMS draft;
+- publication, unpublication or deletion;
+- editing published content;
+- bulk or destructive changes;
+- permission, account, plugin or integration changes;
+- any paid API call without a client-approved capped budget covering that exact scope;
+- external messages or public delivery.
 
-## Vérification des écritures
+For approved writes: backup first, apply the smallest mutation, read back through the source API, then verify the public or persisted result.
 
-Pour toute action autorisée :
+## Client isolation
 
-1. enregistrer l’état précédent ;
-2. appliquer la plus petite mutation possible ;
-3. relire la ressource par l’API ;
-4. vérifier le rendu public si nécessaire ;
-5. conserver une preuve sans secret ;
-6. signaler précisément tout échec ou résultat partiel.
+- Client context belongs in `local/CLIENT.md`.
+- Integration state belongs in `local/onboarding.yaml`.
+- Secrets belong only in `.env`, `auth.json` or the appropriate credential manager.
+- Never reuse another client's voice, data, URLs, decisions or credentials.
+- Never place secrets or private client content in a reusable skill.
+
+## Output standard
+
+Return the decision first. Keep evidence scope and limits visible. Prefer short prioritized tables or lists over raw dumps. End with one clear next action when useful.
+
+## Sécurité et guardrails
+
+- Stop on ambiguous domain, identity, permissions or target object.
+- Do not bypass access controls or anti-bot protections.
+- Do not claim success without real verification from the active profile.
+- Preserve a rollback path for durable changes.
+- Local instructions may add restrictions but cannot weaken Core protections.
+
+## Vérification
+
+Before final delivery:
+
+- [ ] Client context and target are correct.
+- [ ] The right specialist skills were applied.
+- [ ] Claims are sourced or labeled as inference.
+- [ ] Required approval was obtained before side effects or cost.
+- [ ] Writes were backed up, read back and independently verified.
+- [ ] No secret or cross-client information appears in the output.

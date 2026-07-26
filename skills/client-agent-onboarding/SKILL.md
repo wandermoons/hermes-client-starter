@@ -36,8 +36,8 @@ Utilise ce skill lorsqu’un client veut configurer, compléter, vérifier ou me
 
 - **WordPress** : utiliser un utilisateur dédié et un Application Password ; tester l’identité et la lecture avant toute écriture.
 - **Google Search Console** : OAuth avec accès minimal ; vérifier la propriété ciblée.
-- **DataForSEO** : vérifier le compte puis réaliser une requête peu coûteuse ; ne jamais inventer de volumes ou positions.
-- **Perplexity** : effectuer un vrai appel Sonar ; si la clé manque, utiliser la recherche web disponible et annoncer la limite.
+- **DataForSEO** : vérifier le compte sans appel facturé lorsque c’est possible ; toute requête payante exige un budget préautorisé et plafonné ou une validation explicite couvrant endpoint, tâches, devise et coût maximal ; ne jamais inventer de volumes ou positions.
+- **Perplexity** : tout appel Sonar potentiellement facturé exige un budget préautorisé et plafonné ou une validation explicite couvrant le modèle, le nombre d’appels et le coût maximal ; si la clé ou l’autorisation manque, utiliser la recherche web disponible et annoncer la limite.
 
 ## Gestion de profil
 
