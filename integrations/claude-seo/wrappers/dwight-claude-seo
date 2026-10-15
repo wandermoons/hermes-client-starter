@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DWIGHT_HOME="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+SOURCE_ROOT="$DWIGHT_HOME/local/.starter-managed/claude-seo/upstream"
+
+export HOME="$DWIGHT_HOME"
+export XDG_CONFIG_HOME="$DWIGHT_HOME/.config"
+export XDG_CACHE_HOME="$DWIGHT_HOME/.cache"
+export CLAUDE_SEO_DATA_DIR="$DWIGHT_HOME/local/claude-seo-data"
+export MPLCONFIGDIR="$DWIGHT_HOME/.cache/matplotlib"
+export PYTHONNOUSERSITE=1
+
+if [[ -z "${DATAFORSEO_USERNAME:-}" && -n "${DATAFORSEO_LOGIN:-}" ]]; then
+  export DATAFORSEO_USERNAME="$DATAFORSEO_LOGIN"
+fi
+
+[[ -f "$SOURCE_ROOT/bin/claude-seo" ]] || {
+  echo "Dwight Claude SEO source missing: $SOURCE_ROOT" >&2
+  exit 2
+}
+
+if [[ "${1:-}" == "run" ]]; then
+  script="${2:-}"
+  case "$script" in
+    --extension|--extension=*)
+      printf 'Dwight Claude SEO: optional extension execution is disabled in this client release.\n' >&2
+      exit 4
+      ;;
+    agent_ux_check.py|analyze_visual.py|bing_webmaster.py|capture_screenshot.py|commoncrawl_graph.py|consistency_check.py|content_humanize.py|content_quality.py|content_verify.py|crux_history.py|dataforseo_costs.py|dataforseo_normalize.py|domain_history.py|drift_baseline.py|drift_compare.py|drift_history.py|drift_report.py|fetch_page.py|ga4_report.py|gbp_deprecation_lint.py|google_report.py|gsc_inspect.py|gsc_query.py|keyword_planner.py|lcp_subparts.py|moz_api.py|nlp_analyze.py|pagespeed_check.py|parasite_risk.py|parse_html.py|portability_check.py|preload_check.py|render_page.py|runtime.py|schema_ecommerce_validate.py|schema_generate.py|seo_updates.py|sitemap_discovery.py|ucp_check.py|url_safety.py|validate_backlink_report.py|verify_backlinks.py|youtube_search.py)
+      ;;
+    backlinks_auth.py|dataforseo_merchant.py|google_auth.py|indexing_notify.py|indexnow_submit.py|iptc_ai_label.py|release_sign.py|sync_flow.py|unlighthouse_run.py|verify_release.py)
+      printf 'Dwight Claude SEO: script disabled by the client runtime policy: %s\n' "$script" >&2
+      exit 4
+      ;;
+    *)
+      printf 'Dwight Claude SEO: script is not classified by the client runtime policy: %s\n' "${script:-<missing>}" >&2
+      exit 4
+      ;;
+  esac
+fi
+
+exec bash "$SOURCE_ROOT/bin/claude-seo" "$@"

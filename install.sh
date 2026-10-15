@@ -4,6 +4,7 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DWIGHT_SOURCE="${DWIGHT_SOURCE:-$SCRIPT_DIR/distributions/dwight}"
 DWIGHT_PROFILE="${DWIGHT_PROFILE:-dwight}"
+CLAUDE_SEO_INTEGRATION_SOURCE="${CLAUDE_SEO_INTEGRATION_SOURCE:-$SCRIPT_DIR/integrations/claude-seo}"
 
 fail() {
   printf 'Erreur : %s\n' "$1" >&2
@@ -11,6 +12,19 @@ fail() {
 }
 
 command -v hermes >/dev/null 2>&1 || fail 'la commande hermes est introuvable.'
+
+# Refuser un HERMES_HOME traversant un lien symbolique avant le premier appel
+# Hermes : certaines versions peuvent initialiser des fichiers lors de la
+# résolution du profil, ce qui écrirait sinon hors de la racine attendue.
+if [[ -n "${HERMES_HOME:-}" ]]; then
+  python3 - "$HERMES_HOME" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+if path != path.resolve():
+    raise SystemExit(f"HERMES_HOME traversant un ancêtre symbolique : {path}")
+PY
+fi
 
 # Utiliser l’interpréteur de l’installation Hermes, qui possède PyYAML, plutôt
 # que le python3 système dont les dépendances varient selon l’hôte.
@@ -96,6 +110,7 @@ PY
 }
 
 dwight_parent_is_safe() {
+  default_tree_is_safe || return 1
   [[ -d "$PROFILES_ROOT" && ! -L "$PROFILES_ROOT" \
      && "$(dirname "$EXPECTED_DWIGHT_HOME")" == "$PROFILES_ROOT" ]]
 }
@@ -303,6 +318,7 @@ PY
   DWIGHT_UPDATE_HOME="$DWIGHT_HOME_BEFORE"
   hermes profile update "$DWIGHT_PROFILE" --yes
 
+  default_tree_is_safe || fail 'arbre default devenu non sûr après update.'
   dwight_root_is_safe || fail 'racine Dwight devenue non sûre après update.'
   [[ -d "$DWIGHT_UPDATE_HOME/skills" && ! -L "$DWIGHT_UPDATE_HOME/skills" ]] \
     || fail 'dossier skills Dwight devenu non sûr après update.'
@@ -368,6 +384,13 @@ with open(sys.argv[1], encoding='utf-8') as fh:
 print(data.get('version', 'unknown'))
 PY
 )"
+
+# Installer le runtime Claude SEO hors des chemins Core Hermes. Cette couche
+# possède son propre baseline, bloque toute dérive locale et préserve
+# local/claude-seo-data (venv, Chromium, caches et état runtime).
+"$PYTHON_BIN" "$SCRIPT_DIR/scripts/install_claude_seo_payload.py" \
+  --integration-source "$CLAUDE_SEO_INTEGRATION_SOURCE" \
+  --profile-home "$DWIGHT_HOME"
 
 # Adapter uniquement la sélection du modèle au profil default. Ne jamais copier
 # les providers, credentials, tokens ou stratégies d’authentification.
@@ -488,4 +511,5 @@ printf 'Profil principal : %s\n' "$TARGET_HOME"
 printf 'Profil Dwight : %s\n' "$DWIGHT_HOME"
 printf 'Distribution Dwight : v%s\n' "$DWIGHT_VERSION"
 printf 'Contexte canonique : %s\n' "$TARGET_HOME/local/CLIENT.md"
+printf 'Runtime Claude SEO : exécuter `cd %s && ./bin/dwight-claude-seo doctor --json`, puis `./bin/dwight-claude-seo setup` si nécessaire.\n' "$DWIGHT_HOME"
 printf 'Étape suivante : ouvrir une nouvelle session et vérifier l’accès au modèle depuis Dwight.\n'

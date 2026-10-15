@@ -1,0 +1,20 @@
+# Wander Labs RC lock for Claude SEO v2.2.4 direct dependencies.
+# Resolved and smoke-tested on Python 3.11 on 2026-09-03.
+# Transitive dependencies and Linux wheels remain a Docker-staging release gate.
+beautifulsoup4==4.15.0
+requests==2.34.2
+lxml==6.1.1
+playwright==1.62.0
+urllib3==2.7.0
+trafilatura==2.2.0
+htmldate==1.10.0
+courlan==1.4.0
+matplotlib==3.11.1
+numpy==2.4.6
+weasyprint==69.0
+openpyxl==3.1.5
+google-api-python-client==2.198.0
+google-auth==2.56.2
+google-auth-httplib2==0.4.0
+google-analytics-data==0.23.0
+google-ads==31.2.0

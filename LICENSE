@@ -4,3 +4,8 @@ This source code is publicly visible for deployment and evaluation.
 Use, modification, redistribution, resale, or creation of derivative commercial
 services requires prior written permission from Wander Labs, except for clients
 and installations explicitly authorized by Wander Labs.
+
+Third-party components remain governed by their own licenses. In particular,
+the vendored and adapted AgriciDaniel/claude-seo components are licensed under
+the MIT License reproduced in integrations/claude-seo/runtime/LICENSE; the
+Wander Labs restrictions above do not replace or narrow those MIT rights.

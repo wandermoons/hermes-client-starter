@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP_BASE="$(python3 -c 'import os,tempfile; print(os.path.realpath(tempfile.gettempdir()))')"
-TMP="$(mktemp -d "$TMP_BASE/dwight-v012-upgrade.XXXXXX")"
+TMP="$(mktemp -d "$TMP_BASE/dwight-v013-upgrade.XXXXXX")"
 cleanup() {
   python3 -c 'import shutil,sys; shutil.rmtree(sys.argv[1], ignore_errors=True)' "$TMP"
 }
@@ -14,7 +14,7 @@ HOME_DIR="$TMP/home"
 mkdir -p "$HOME_DIR"
 
 git clone --quiet --no-hardlinks "$ROOT" "$WORKING"
-git -C "$WORKING" checkout --quiet v0.1.1
+git -C "$WORKING" checkout --quiet v0.1.2
 cp "$WORKING/distributions/dwight/config.yaml" "$HOME_DIR/config.yaml"
 
 HERMES_HOME="$HOME_DIR" "$WORKING/install.sh" >/dev/null
@@ -48,11 +48,11 @@ printf '%s\n' \
   '' \
   '# Synthetic probe' > "$CLIENT_SKILL/SKILL.md"
 
-NEW_CORE_COLLISION="$HOME_DIR/profiles/dwight/skills/dwight-brand-voice-extraction"
+NEW_CORE_COLLISION="$HOME_DIR/profiles/dwight/skills/dwight-claude-seo"
 mkdir -p "$NEW_CORE_COLLISION"
 printf '%s\n' \
   '---' \
-  'name: dwight-brand-voice-extraction' \
+  'name: dwight-claude-seo' \
   'description: "Synthetic pre-existing client collision probe."' \
   'version: 0.0.1' \
   '---' > "$NEW_CORE_COLLISION/SKILL.md"
@@ -75,7 +75,7 @@ python3 - "$WORKING/distributions/dwight/distribution.yaml" <<'PY'
 import sys, yaml
 with open(sys.argv[1], encoding='utf-8') as fh:
     data = yaml.safe_load(fh) or {}
-assert str(data.get('version')) == '0.1.2', data
+assert str(data.get('version')) == '0.1.3', data
 PY
 
 COLLISION_LOG="$TMP/new-core-collision.log"
@@ -91,11 +91,20 @@ HERMES_HOME="$HOME_DIR" "$WORKING/install.sh"
 
 test -f "$CLIENT_SKILL/SKILL.md"
 grep -q 'Synthetic probe' "$CLIENT_SKILL/SKILL.md"
+test -x "$HOME_DIR/profiles/dwight/bin/dwight-claude-seo"
+test -x "$HOME_DIR/profiles/dwight/bin/dwight-schema-org-hook"
+test -f "$HOME_DIR/profiles/dwight/local/.starter-managed/claude-seo-state.json"
+CLAUDE_RUNTIME_SENTINEL="$HOME_DIR/profiles/dwight/local/claude-seo-data/preserve-me.txt"
+mkdir -p "$(dirname "$CLAUDE_RUNTIME_SENTINEL")"
+printf '%s\n' 'runtime data survives upgrades' > "$CLAUDE_RUNTIME_SENTINEL"
+# A successful repeat install must be idempotent and preserve runtime data.
+HERMES_HOME="$HOME_DIR" "$WORKING/install.sh" >/dev/null
+grep -q '^runtime data survives upgrades$' "$CLAUDE_RUNTIME_SENTINEL"
 python3 - "$HOME_DIR/profiles/dwight/distribution.yaml" <<'PY'
 import sys, yaml
 with open(sys.argv[1], encoding='utf-8') as fh:
     data = yaml.safe_load(fh) or {}
-assert str(data.get('version')) == '0.1.2', data
+assert str(data.get('version')) == '0.1.3', data
 PY
 python3 - "$HOME_DIR/profiles/dwight/config.yaml" <<'PY'
 import sys, yaml
@@ -266,6 +275,37 @@ test -f "$CLIENT_SKILL/SKILL.md"
 test ! -e "$OUTSIDE_DWIGHT_ROOT/SOUL.md"
 assert_dwight_modes
 
+DISPLACED_DEFAULT_ROOT="$TMP/displaced-default-root"
+OUTSIDE_DEFAULT_ROOT="$TMP/outside-default-root"
+OUTSIDE_DEFAULT_BASELINE="$TMP/outside-default-baseline"
+FAKE_DEFAULT_ROOT_BIN="$TMP/fake-default-root-bin"
+mkdir -p "$FAKE_DEFAULT_ROOT_BIN"
+printf '%s\n' \
+  '#!/usr/bin/env bash' \
+  'if [[ "$1" == profile && "$2" == update ]]; then' \
+  "  \"$REAL_HERMES\" \"\$@\" || exit \$?" \
+  "  mv \"\$HERMES_HOME\" \"$DISPLACED_DEFAULT_ROOT\"" \
+  "  mkdir -p \"$OUTSIDE_DEFAULT_ROOT\"" \
+  "  cp -Rp \"$DISPLACED_DEFAULT_ROOT/.\" \"$OUTSIDE_DEFAULT_ROOT/\"" \
+  "  cp -Rp \"$OUTSIDE_DEFAULT_ROOT\" \"$OUTSIDE_DEFAULT_BASELINE\"" \
+  "  ln -s \"$OUTSIDE_DEFAULT_ROOT\" \"\$HERMES_HOME\"" \
+  '  exit 0' \
+  'fi' \
+  "exec \"$REAL_HERMES\" \"\$@\"" > "$FAKE_DEFAULT_ROOT_BIN/hermes"
+chmod 700 "$FAKE_DEFAULT_ROOT_BIN/hermes"
+DEFAULT_ROOT_LOG="$TMP/default-root-after-update.log"
+if PATH="$FAKE_DEFAULT_ROOT_BIN:$PATH" HERMES_HOME="$HOME_DIR" "$WORKING/install.sh" >"$DEFAULT_ROOT_LOG" 2>&1; then
+  printf 'expected post-update default root substitution to block installation\n' >&2
+  exit 1
+fi
+grep -q 'arbre default devenu non sûr après update' "$DEFAULT_ROOT_LOG"
+test -L "$HOME_DIR"
+diff -qr "$OUTSIDE_DEFAULT_BASELINE" "$OUTSIDE_DEFAULT_ROOT" >/dev/null
+rm "$HOME_DIR"
+mv "$DISPLACED_DEFAULT_ROOT" "$HOME_DIR"
+assert_dwight_modes
+assert_default_modes
+
 OUTSIDE_DEFAULT_SKILLS="$TMP/outside-default-skills"
 SAVED_DEFAULT_SKILLS="$TMP/saved-default-skills"
 FAKE_DEFAULT_SYMLINK_BIN="$TMP/fake-default-symlink-bin"
@@ -322,7 +362,7 @@ python3 - "$HOME_DIR/profiles/dwight/distribution.yaml" <<'PY'
 import sys, yaml
 with open(sys.argv[1], encoding='utf-8') as fh:
     data = yaml.safe_load(fh) or {}
-assert str(data.get('version')) == '0.1.2', data
+assert str(data.get('version')) == '0.1.3', data
 PY
 assert_dwight_modes
 
@@ -439,5 +479,6 @@ if HERMES_HOME="$HOME_DIR" "$WORKING/install.sh" >/dev/null 2>&1; then
   exit 1
 fi
 grep -q 'unauthorized managed edit' "$HOME_DIR/profiles/dwight/SOUL.md"
+grep -q '^runtime data survives upgrades$' "$CLAUDE_RUNTIME_SENTINEL"
 
 printf 'INSTALL_UPGRADE_GUARDS_OK\n'

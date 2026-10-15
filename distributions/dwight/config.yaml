@@ -38,11 +38,13 @@ memory:
   user_profile_enabled: true
 
 delegation:
-  inherit_mcp_toolsets: true
-  max_iterations: 50
+  inherit_mcp_toolsets: false
+  max_iterations: 30
   max_concurrent_children: 3
-  max_spawn_depth: 1
+  max_spawn_depth: 2
   orchestrator_enabled: true
+  subagent_auto_approve: false
+  child_timeout_seconds: 1200
 
 display:
   language: fr

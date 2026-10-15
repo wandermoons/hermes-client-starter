@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wanderlabs:dwight-claude-seo:fan-in-result:v1",
+  "title": "Dwight Claude SEO fan-in result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "target",
+    "mode",
+    "waves_launched",
+    "leaf_tasks_launched",
+    "status_matrix",
+    "findings",
+    "phase0_paid_acquisitions",
+    "leaf_paid_calls",
+    "production_mutations",
+    "errors",
+    "limitations",
+    "evidence_integrity"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "waves_launched": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "leaf_tasks_launched": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 18
+    },
+    "status_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 18,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "specialist",
+          "status",
+          "findings_count"
+        ],
+        "properties": {
+          "specialist": {
+            "enum": [
+              "dwight-claude-seo-agent-backlinks",
+              "dwight-claude-seo-agent-cluster",
+              "dwight-claude-seo-agent-content",
+              "dwight-claude-seo-agent-dataforseo",
+              "dwight-claude-seo-agent-drift",
+              "dwight-claude-seo-agent-ecommerce",
+              "dwight-claude-seo-agent-flow",
+              "dwight-claude-seo-agent-geo",
+              "dwight-claude-seo-agent-google",
+              "dwight-claude-seo-agent-image-gen",
+              "dwight-claude-seo-agent-local",
+              "dwight-claude-seo-agent-maps",
+              "dwight-claude-seo-agent-performance",
+              "dwight-claude-seo-agent-schema",
+              "dwight-claude-seo-agent-sitemap",
+              "dwight-claude-seo-agent-sxo",
+              "dwight-claude-seo-agent-technical",
+              "dwight-claude-seo-agent-visual"
+            ]
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "skipped",
+              "failed",
+              "invalid"
+            ]
+          },
+          "findings_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "issue_type",
+          "affected_url",
+          "evidence_id",
+          "severity",
+          "title",
+          "impact",
+          "recommendation",
+          "leading_indicator",
+          "falsification_test",
+          "confidence",
+          "specialist_sources"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issue_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommendation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "leading_indicator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "falsification_test": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "specialist_sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "dwight-claude-seo-agent-backlinks",
+                "dwight-claude-seo-agent-cluster",
+                "dwight-claude-seo-agent-content",
+                "dwight-claude-seo-agent-dataforseo",
+                "dwight-claude-seo-agent-drift",
+                "dwight-claude-seo-agent-ecommerce",
+                "dwight-claude-seo-agent-flow",
+                "dwight-claude-seo-agent-geo",
+                "dwight-claude-seo-agent-google",
+                "dwight-claude-seo-agent-image-gen",
+                "dwight-claude-seo-agent-local",
+                "dwight-claude-seo-agent-maps",
+                "dwight-claude-seo-agent-performance",
+                "dwight-claude-seo-agent-schema",
+                "dwight-claude-seo-agent-sitemap",
+                "dwight-claude-seo-agent-sxo",
+                "dwight-claude-seo-agent-technical",
+                "dwight-claude-seo-agent-visual"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "phase0_paid_acquisitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "api",
+          "operation",
+          "cap",
+          "actual_cost",
+          "evidence_path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "api": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cap": {
+            "type": "number",
+            "minimum": 0
+          },
+          "actual_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "evidence_path": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "leaf_paid_calls": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "production_mutations": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files_checked",
+        "all_hashes_match",
+        "invalid_evidence_ids"
+      ],
+      "properties": {
+        "files_checked": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "all_hashes_match": {
+          "const": true
+        },
+        "invalid_evidence_ids": {
+          "type": "array",
+          "maxItems": 0,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

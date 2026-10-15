@@ -5,7 +5,6 @@ from pathlib import Path
 
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DWIGHT = ROOT / "distributions" / "dwight"
 SKILLS_ROOT = DWIGHT / "skills"
@@ -20,6 +19,13 @@ EXPECTED_SKILLS = {
     "dwight-seo-internal-linking",
     "dwight-wordpress-safe-operations",
     "dwight-brand-voice-extraction",
+    "dwight-claude-seo",
+    "dwight-claude-seo-fanout",
+}
+
+EXPECTED_MANAGED_SKILL_ROOTS = EXPECTED_SKILLS | {
+    "claude-seo-upstream",
+    "dwight-claude-seo-agents",
 }
 
 
@@ -69,17 +75,17 @@ class DwightCoreStructureTests(unittest.TestCase):
             self.assertIn(f"`{name}`", core)
             self.assertTrue((SKILLS_ROOT / name / "SKILL.md").is_file())
 
-    def test_versions_are_bumped_to_0_1_2(self) -> None:
-        self.assertEqual("0.1.2", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
+    def test_versions_are_bumped_to_0_1_3(self) -> None:
+        self.assertEqual("0.1.3", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
         manifest = yaml.safe_load((DWIGHT / "distribution.yaml").read_text(encoding="utf-8"))
-        self.assertEqual("0.1.2", str(manifest["version"]))
+        self.assertEqual("0.1.3", str(manifest["version"]))
 
     def test_manifest_owns_only_explicit_core_skill_directories(self) -> None:
         manifest = yaml.safe_load((DWIGHT / "distribution.yaml").read_text(encoding="utf-8"))
         owned = set(manifest["distribution_owned"])
         self.assertNotIn("skills", owned)
         self.assertNotIn("skills/", owned)
-        for name in EXPECTED_SKILLS:
+        for name in EXPECTED_MANAGED_SKILL_ROOTS:
             self.assertIn(f"skills/{name}/", owned)
 
     def test_all_seven_behavior_scenarios_are_documented(self) -> None:

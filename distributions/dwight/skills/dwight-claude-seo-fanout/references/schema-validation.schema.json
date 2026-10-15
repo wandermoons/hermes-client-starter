@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wanderlabs:dwight-claude-seo:schema-validation:v1",
+  "title": "Dwight Schema.org post-render validation artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "validator",
+    "validator_version",
+    "generated_at",
+    "target_url",
+    "final_url",
+    "status",
+    "valid",
+    "summary",
+    "raw",
+    "rendered",
+    "render_comparison",
+    "findings",
+    "limitations",
+    "production_mutations",
+    "paid_calls"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "validator": {"const": "dwight-schema-org-hook"},
+    "validator_version": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "minLength": 1},
+    "target_url": {"type": "string", "minLength": 1},
+    "final_url": {"type": "string", "minLength": 1},
+    "status": {"enum": ["valid", "invalid", "not_found", "partial"]},
+    "valid": {"type": ["boolean", "null"]},
+    "summary": {"$ref": "#/$defs/summary"},
+    "raw": {"$ref": "#/$defs/extraction"},
+    "rendered": {"$ref": "#/$defs/extraction"},
+    "render_comparison": {"$ref": "#/$defs/renderComparison"},
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "production_mutations": {"type": "array", "maxItems": 0},
+    "paid_calls": {"type": "array", "maxItems": 0}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "valid"}}},
+      "then": {"properties": {"valid": {"const": true}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "invalid"}}},
+      "then": {"properties": {"valid": {"const": false}}}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["not_found", "partial"]}}},
+      "then": {"properties": {"valid": {"const": null}}}
+    }
+  ],
+  "$defs": {
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blocks",
+        "processed_blocks",
+        "valid_json_blocks",
+        "invalid_json_blocks",
+        "entities",
+        "types",
+        "errors",
+        "warnings",
+        "info"
+      ],
+      "properties": {
+        "blocks": {"type": "integer", "minimum": 0},
+        "processed_blocks": {"type": "integer", "minimum": 0},
+        "valid_json_blocks": {"type": "integer", "minimum": 0},
+        "invalid_json_blocks": {"type": "integer", "minimum": 0},
+        "entities": {"type": "integer", "minimum": 0},
+        "types": {"$ref": "#/$defs/types"},
+        "errors": {"type": "integer", "minimum": 0},
+        "warnings": {"type": "integer", "minimum": 0},
+        "info": {"type": "integer", "minimum": 0}
+      }
+    },
+    "types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "extraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_count",
+        "processed_count",
+        "total_bytes",
+        "truncated",
+        "types",
+        "blocks",
+        "entity_count"
+      ],
+      "properties": {
+        "block_count": {"type": "integer", "minimum": 0},
+        "processed_count": {"type": "integer", "minimum": 0},
+        "total_bytes": {"type": "integer", "minimum": 0},
+        "truncated": {"type": "boolean"},
+        "types": {"$ref": "#/$defs/types"},
+        "entity_count": {"type": "integer", "minimum": 0},
+        "blocks": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/block"}
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "size_bytes", "sha256", "valid_json", "data"],
+      "properties": {
+        "index": {"type": "integer", "minimum": 1},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "valid_json": {"type": ["boolean", "null"]},
+        "data": {},
+        "raw_preview": {"type": "string"},
+        "parse_error": {"type": "string", "minLength": 1},
+        "entity_count": {"type": "integer", "minimum": 0},
+        "types": {"$ref": "#/$defs/types"}
+      }
+    },
+    "renderComparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["javascript_injected", "raw_types", "rendered_types", "rendered_only_types"],
+      "properties": {
+        "javascript_injected": {"type": "boolean"},
+        "raw_types": {"$ref": "#/$defs/types"},
+        "rendered_types": {"$ref": "#/$defs/types"},
+        "rendered_only_types": {"$ref": "#/$defs/types"}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "message",
+        "source",
+        "block_index",
+        "json_pointer",
+        "evidence_id",
+        "rule_source"
+      ],
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["error", "warning", "info"]},
+        "message": {"type": "string", "minLength": 1},
+        "source": {"enum": ["raw", "rendered", "render_comparison"]},
+        "block_index": {"type": ["integer", "null"], "minimum": 1},
+        "json_pointer": {"type": "string"},
+        "evidence_id": {"type": "string", "minLength": 1},
+        "rule_source": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
