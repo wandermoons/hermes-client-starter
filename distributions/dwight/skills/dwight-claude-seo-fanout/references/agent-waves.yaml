@@ -1,0 +1,229 @@
+version: 1
+profile: dwight
+source:
+  project: AgriciDaniel/claude-seo
+  release: v2.2.4
+  commit: 6b63c8bb7b2e8e4480060604555e3af629b54c2c
+orchestration:
+  max_concurrent_children: 3
+  max_spawn_depth: 2
+  strategy: one orchestrator child, sequential waves, leaf batches
+  shared_evidence_required: true
+  parent_owns_final_writes: true
+  child_timeout_seconds: 1200
+  leaf_paid_calls_allowed: false
+  leaf_external_network_allowed: false
+  schema_hook:
+    required_for_html_pages: true
+    command: dwight-schema-org-hook
+    stage: phase0-post-render-before-delegation
+    mode: always
+    non_blocking_default: true
+    validation_schema: references/schema-validation.schema.json
+    artifacts:
+    - render.json
+    - schema-validation.json
+waves:
+- id: foundation
+  label: Fondations techniques
+  agents:
+  - dwight-claude-seo-agent-technical
+  - dwight-claude-seo-agent-performance
+  - dwight-claude-seo-agent-visual
+  depends_on_waves: []
+- id: indexation
+  label: Indexation et compréhension
+  agents:
+  - dwight-claude-seo-agent-sitemap
+  - dwight-claude-seo-agent-schema
+  - dwight-claude-seo-agent-google
+  depends_on_waves:
+  - foundation
+- id: content-ai
+  label: Contenu, GEO et expérience de recherche
+  agents:
+  - dwight-claude-seo-agent-content
+  - dwight-claude-seo-agent-geo
+  - dwight-claude-seo-agent-sxo
+  depends_on_waves:
+  - foundation
+  - indexation
+- id: authority-market
+  label: Marché, autorité et architecture sémantique
+  agents:
+  - dwight-claude-seo-agent-dataforseo
+  - dwight-claude-seo-agent-backlinks
+  - dwight-claude-seo-agent-cluster
+  depends_on_waves:
+  - content-ai
+- id: local-commerce
+  label: Local, Maps et commerce
+  agents:
+  - dwight-claude-seo-agent-local
+  - dwight-claude-seo-agent-maps
+  - dwight-claude-seo-agent-ecommerce
+  depends_on_waves:
+  - foundation
+  - indexation
+- id: monitoring-production
+  label: Dérive, stratégie FLOW et plan visuel
+  agents:
+  - dwight-claude-seo-agent-drift
+  - dwight-claude-seo-agent-flow
+  - dwight-claude-seo-agent-image-gen
+  depends_on_waves:
+  - foundation
+  - indexation
+  - content-ai
+  - authority-market
+  - local-commerce
+specialists:
+  dwight-claude-seo-agent-technical:
+    upstream_agent: seo-technical
+    primary_skill: seo-technical
+    wave: foundation
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-performance:
+    upstream_agent: seo-performance
+    primary_skill: seo-technical
+    wave: foundation
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-visual:
+    upstream_agent: seo-visual
+    primary_skill: seo-technical
+    wave: foundation
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-sitemap:
+    upstream_agent: seo-sitemap
+    primary_skill: seo-sitemap
+    wave: indexation
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-schema:
+    upstream_agent: seo-schema
+    primary_skill: seo-schema
+    wave: indexation
+    mode: always
+    condition: toujours pour un audit complet
+    required_evidence:
+    - schema-validation.json
+    - render.json
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-google:
+    upstream_agent: seo-google
+    primary_skill: seo-google
+    wave: indexation
+    mode: always
+    condition: Toujours analyser les preuves Google disponibles, y compris Tier 0 PSI/CrUX; OAuth GSC et GA4 enrichissent
+      sans conditionner le lancement.
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-content:
+    upstream_agent: seo-content
+    primary_skill: seo-content
+    wave: content-ai
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-geo:
+    upstream_agent: seo-geo
+    primary_skill: seo-geo
+    wave: content-ai
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-sxo:
+    upstream_agent: seo-sxo
+    primary_skill: seo-sxo
+    wave: content-ai
+    mode: always
+    condition: toujours pour un audit complet
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-dataforseo:
+    upstream_agent: seo-dataforseo
+    primary_skill: seo-dataforseo
+    wave: authority-market
+    mode: conditional
+    condition: artefact DataForSEO existant ou préautorisation payante explicite et plafonnée
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-backlinks:
+    upstream_agent: seo-backlinks
+    primary_skill: seo-backlinks
+    wave: authority-market
+    mode: always
+    condition: Toujours analyser le tier gratuit ou les artefacts disponibles; sans preuve, retourner partial/skipped avec
+      manque explicite.
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-cluster:
+    upstream_agent: seo-cluster
+    primary_skill: seo-cluster
+    wave: authority-market
+    mode: conditional
+    condition: recherche éditoriale ou architecture de contenu dans le périmètre
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-local:
+    upstream_agent: seo-local
+    primary_skill: seo-local
+    wave: local-commerce
+    mode: conditional
+    condition: activité locale, établissement ou zone de service détectée
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-maps:
+    upstream_agent: seo-maps
+    primary_skill: seo-maps
+    wave: local-commerce
+    mode: conditional
+    condition: activité locale et données Maps/GBP publiques ou autorisées
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-ecommerce:
+    upstream_agent: seo-ecommerce
+    primary_skill: seo-ecommerce
+    wave: local-commerce
+    mode: conditional
+    condition: site e-commerce détecté
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-drift:
+    upstream_agent: seo-drift
+    primary_skill: seo-drift
+    wave: monitoring-production
+    mode: conditional
+    condition: baseline précédente disponible
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-flow:
+    upstream_agent: seo-flow
+    primary_skill: seo-flow
+    wave: monitoring-production
+    mode: conditional
+    condition: plan de croissance/activation demandé
+    result_schema: references/specialist-result.schema.json
+    mutation: false
+  dwight-claude-seo-agent-image-gen:
+    upstream_agent: seo-image-gen
+    primary_skill: seo-image-gen
+    wave: monitoring-production
+    mode: conditional
+    condition: audit ou plan d’images demandé; ne génère aucune image automatiquement
+    result_schema: references/specialist-result.schema.json
+    mutation: false

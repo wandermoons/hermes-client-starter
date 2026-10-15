@@ -16,9 +16,9 @@ cd hermes-client-starter
 
 Le script installe Dwight depuis `distributions/dwight/`. Aucun token GitHub, second clone ou accès à un dépôt privé n’est nécessaire.
 
-## Capacités Dwight v0.1.2
+## Capacités Dwight v0.1.3
 
-Le Core comprend un routeur et huit capacités spécialisées :
+Le Core comprend les capacités historiques et une adaptation client-safe de [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo), figée sur `v2.2.4` (`6b63c8bb7b2e8e4480060604555e3af629b54c2c`) :
 
 - recherche actuelle et synthèse sourcée ;
 - mots-clés, SERP, concurrents, rangs, backlinks et DataForSEO ;
@@ -28,6 +28,10 @@ Le Core comprend un routeur et huit capacités spécialisées :
 - audit et correction sécurisée du maillage interne ;
 - opérations WordPress en mode sûr ;
 - extraction d’un Brand Voice Guide depuis un corpus détenu, licencié ou explicitement autorisé ; analyse descriptive non imitative pour les tiers publics.
+- 25 méthodologies Claude SEO portées comme skills Hermes ;
+- 18 spécialistes Hermes pour les audits techniques, contenu/GEO/SXO, schéma, performance, autorité, local et e-commerce ;
+- fan-out/fan-in natif en six vagues de trois spécialistes maximum ;
+- runtime Python et Chromium isolé dans le profil Dwight, avec `doctor`, installation idempotente et hook de validation Schema.org.
 
 Toutes les capacités distinguent données mesurées, sources externes et recommandations. Toute mutation externe persistante nécessite une validation explicite. Tout appel payant doit être couvert par un budget préautorisé et plafonné, sinon être validé précisément avant exécution.
 
@@ -42,7 +46,7 @@ git pull --ff-only
 
 L’installateur vérifie la provenance du profil Dwight, met à jour la distribution, préserve les données runtime et locales, puis met à jour le profil orchestrateur.
 
-### Mise à jour sûre v0.1.2
+### Mise à jour sûre v0.1.3
 
 Selon la version Hermes installée, `hermes profile update` peut remplacer le dossier `skills/` de la distribution en entier. Il faut donc utiliser `./install.sh`, pas la commande Hermes directe.
 
@@ -56,7 +60,20 @@ Avant l’update, l’installateur :
 
 L’installateur ne copie depuis le profil principal que les champs sûrs de sélection du modèle (`default`, `provider`, `base_url`). Il ne copie jamais les blocs providers, credentials, tokens ou stratégies d’authentification.
 
-La personnalisation persistante et composable du SOUL reste le chantier v0.2.0. En v0.1.2, toute modification directe d’un fichier Core bloque volontairement la mise à jour.
+Le runtime Claude SEO est installé sous `profiles/dwight/local/.starter-managed/claude-seo/`. Son environnement virtuel, Chromium et ses caches restent sous `profiles/dwight/local/claude-seo-data/` et sont préservés pendant les mises à jour. Toute dérive du payload ou de ses wrappers bloque volontairement l’update.
+
+Après la première installation de `v0.1.3`, initialiser le runtime depuis le profil Dwight :
+
+```bash
+cd /opt/data/profiles/dwight
+./bin/dwight-claude-seo doctor --json
+./bin/dwight-claude-seo setup
+./bin/dwight-claude-seo doctor --json
+```
+
+`setup` télécharge les dépendances Python et Chromium. Il ne doit être lancé qu’après le snapshot et le préflight du VPS. Les APIs payantes et les mutations externes restent désactivées sans autorisation explicite. Voir le runbook pilote [`docs/UPGRADE_V0.1.3_RC1.md`](docs/UPGRADE_V0.1.3_RC1.md).
+
+La personnalisation persistante et composable du SOUL reste le chantier v0.2.0. En v0.1.3, toute modification directe d’un fichier Core bloque volontairement la mise à jour.
 
 ## Données conservées localement
 
@@ -95,8 +112,10 @@ Après installation isolée, exécuter un appel réel au modèle et les scénari
 
 ## Statut
 
-Version `0.1.2` — Dwight Core Capabilities. Déploiement pilote supervisé avant généralisation.
+Version `0.1.3-rc1` — Dwight Core + Claude SEO client-safe. Release candidate publiée pour un pilote contrôlé ; aucun déploiement client n’est automatique.
 
 ## Licence
 
-Code visible publiquement, tous droits réservés à Wander Labs. Utilisation autorisée pour les installations et clients approuvés par Wander Labs.
+Le code propre au starter et les adaptations Wander Labs restent soumis aux conditions indiquées par le dépôt. Les fichiers dérivés de `AgriciDaniel/claude-seo` restent sous licence MIT ; leur attribution, version, commit et copie de licence sont conservés sous `integrations/claude-seo/`.
+
+Code visible publiquement, tous droits réservés à Wander Labs hors composants tiers explicitement licenciés. Utilisation autorisée pour les installations et clients approuvés par Wander Labs.

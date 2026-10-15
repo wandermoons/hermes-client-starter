@@ -1,0 +1,504 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wanderlabs:dwight-claude-seo:specialist-result:v1",
+  "title": "Dwight Claude SEO specialist result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "specialist",
+    "upstream_agent",
+    "status",
+    "score",
+    "summary",
+    "findings",
+    "limitations",
+    "data_sources_used",
+    "paid_calls",
+    "production_mutations"
+  ],
+  "properties": {
+    "specialist": {
+      "type": "string",
+      "minLength": 1
+    },
+    "upstream_agent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial",
+        "blocked",
+        "skipped"
+      ]
+    },
+    "score": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "evidence_id",
+          "issue_type",
+          "affected_url",
+          "severity",
+          "title",
+          "observation",
+          "impact",
+          "recommendation",
+          "leading_indicator",
+          "falsification_test",
+          "confidence",
+          "sources",
+          "depends_on"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issue_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommendation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "leading_indicator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "falsification_test": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "data_sources_used": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "paid_calls": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "production_mutations": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-technical"
+            },
+            "upstream_agent": {
+              "const": "seo-technical"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-performance"
+            },
+            "upstream_agent": {
+              "const": "seo-performance"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-visual"
+            },
+            "upstream_agent": {
+              "const": "seo-visual"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-sitemap"
+            },
+            "upstream_agent": {
+              "const": "seo-sitemap"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-schema"
+            },
+            "upstream_agent": {
+              "const": "seo-schema"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-google"
+            },
+            "upstream_agent": {
+              "const": "seo-google"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-content"
+            },
+            "upstream_agent": {
+              "const": "seo-content"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-geo"
+            },
+            "upstream_agent": {
+              "const": "seo-geo"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-sxo"
+            },
+            "upstream_agent": {
+              "const": "seo-sxo"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-dataforseo"
+            },
+            "upstream_agent": {
+              "const": "seo-dataforseo"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-backlinks"
+            },
+            "upstream_agent": {
+              "const": "seo-backlinks"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-cluster"
+            },
+            "upstream_agent": {
+              "const": "seo-cluster"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-local"
+            },
+            "upstream_agent": {
+              "const": "seo-local"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-maps"
+            },
+            "upstream_agent": {
+              "const": "seo-maps"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-ecommerce"
+            },
+            "upstream_agent": {
+              "const": "seo-ecommerce"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-drift"
+            },
+            "upstream_agent": {
+              "const": "seo-drift"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-flow"
+            },
+            "upstream_agent": {
+              "const": "seo-flow"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        },
+        {
+          "properties": {
+            "specialist": {
+              "const": "dwight-claude-seo-agent-image-gen"
+            },
+            "upstream_agent": {
+              "const": "seo-image-gen"
+            }
+          },
+          "required": [
+            "specialist",
+            "upstream_agent"
+          ]
+        }
+      ]
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "partial",
+              "blocked",
+              "skipped"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "limitations": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "blocked",
+              "skipped"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "score": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

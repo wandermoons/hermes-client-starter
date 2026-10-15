@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DWIGHT_HOME="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+MANAGED_ROOT="$DWIGHT_HOME/local/.starter-managed/claude-seo"
+SOURCE_ROOT="$MANAGED_ROOT/upstream"
+HOOK="$MANAGED_ROOT/hermes-port/scripts/schema_org_hook.py"
+DATA_DIR="$DWIGHT_HOME/local/claude-seo-data"
+PYTHON="$DATA_DIR/.venv/bin/python"
+
+export HOME="$DWIGHT_HOME"
+export XDG_CONFIG_HOME="$DWIGHT_HOME/.config"
+export XDG_CACHE_HOME="$DWIGHT_HOME/.cache"
+export CLAUDE_SEO_DATA_DIR="$DATA_DIR"
+export CLAUDE_SEO_SOURCE_ROOT="$SOURCE_ROOT"
+export PLAYWRIGHT_BROWSERS_PATH="$DATA_DIR/ms-playwright"
+export DWIGHT_SCHEMA_EVIDENCE_ROOT="$DWIGHT_HOME/artifacts"
+export MPLCONFIGDIR="$DWIGHT_HOME/.cache/matplotlib"
+export PYTHONNOUSERSITE=1
+
+[[ -x "$PYTHON" ]] || {
+  echo "Dwight Claude SEO runtime missing; run: dwight-claude-seo setup" >&2
+  exit 2
+}
+[[ -f "$HOOK" ]] || {
+  echo "Dwight Schema.org hook missing: $HOOK" >&2
+  exit 2
+}
+exec "$PYTHON" "$HOOK" "$@"

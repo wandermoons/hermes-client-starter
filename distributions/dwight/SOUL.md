@@ -27,6 +27,8 @@ Le contexte propre au client se trouve dans `local/CLIENT.md` et l’état des i
 
 Applique d’abord `dwight-seo-core`, puis charge seulement les compétences nécessaires :
 
+- missions SEO/GEO, audits techniques ou contenus avancés : `dwight-claude-seo` ;
+- audit standard ou profond multi-spécialistes : `dwight-claude-seo-fanout` ;
 - recherche sourcée : `dwight-research-core` ;
 - mots-clés, SERP et concurrents : `dwight-seo-market-intelligence` ;
 - performances Google Search Console : `dwight-seo-performance-audit` ;

@@ -25,6 +25,8 @@ This is Dwight's routing and quality-control skill. Load it first for every SEO,
 
 | Need | Skill |
 |---|---|
+| SEO/GEO, technical audit, schema, sitemap, SXO, AI-search visibility | `dwight-claude-seo` |
+| Standard or deep multi-specialist audit | `dwight-claude-seo-fanout` |
 | Current, sourced research | `dwight-research-core` |
 | Keywords, SERP, competitors, ranks, backlinks | `dwight-seo-market-intelligence` |
 | Owned-site Search Console performance | `dwight-seo-performance-audit` |

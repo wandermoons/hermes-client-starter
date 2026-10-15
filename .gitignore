@@ -8,6 +8,10 @@ auth.json
 
 # Client-local and runtime data
 local/
+# The vendored Claude SEO skill contains upstream static prompts in a folder
+# named "local"; these are distribution source, not client runtime state.
+!distributions/dwight/skills/claude-seo-upstream/seo-flow/references/prompts/local/
+!distributions/dwight/skills/claude-seo-upstream/seo-flow/references/prompts/local/**
 memories/
 sessions/
 logs/

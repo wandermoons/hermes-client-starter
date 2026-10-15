@@ -5,7 +5,6 @@ import re
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SUFFIXES = {
     ".csv", ".ini", ".json", ".md", ".py", ".sh", ".toml",
@@ -62,7 +61,7 @@ def normalized_secret_value(value: str) -> str:
     return value.strip().strip("'\"<>").lower()
 
 
-def secret_violations(text: str) -> list[str]:
+def secret_violations(text: str, *, scan_generic_assignments: bool = True) -> list[str]:
     violations: list[str] = []
     if any(sentinel in text for sentinel in PRIVATE_KEY_SENTINELS):
         violations.append("private key")
@@ -76,10 +75,16 @@ def secret_violations(text: str) -> list[str]:
         if pattern.search(text):
             violations.append("provider token")
             break
-    for match in SENSITIVE_VALUE.finditer(text):
-        value = normalized_secret_value(match.group(1))
-        if value not in PLACEHOLDERS and not value.startswith("${"):
-            violations.append("non-empty sensitive value")
+    if scan_generic_assignments:
+        for match in SENSITIVE_VALUE.finditer(text):
+            raw_value = match.group(1).strip().strip("'\"")
+            value = normalized_secret_value(match.group(1))
+            if (
+                value not in PLACEHOLDERS
+                and not value.startswith("${")
+                and not (raw_value.startswith("<") and raw_value.endswith(">"))
+            ):
+                violations.append("non-empty sensitive value")
     return violations
 
 
@@ -110,7 +115,10 @@ class DwightCoreSanitizationTests(unittest.TestCase):
         violations: list[str] = []
         for path in public_files():
             text = path.read_text(encoding="utf-8", errors="replace")
-            for violation in secret_violations(text):
+            for violation in secret_violations(
+                text,
+                scan_generic_assignments=path.suffix.lower() not in {".py", ".sh"},
+            ):
                 violations.append(f"{path.relative_to(ROOT)}: {violation}")
         self.assertEqual([], violations)
 

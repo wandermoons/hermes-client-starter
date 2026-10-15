@@ -16,6 +16,7 @@ integrations:
   google_search_console: pending
   dataforseo: pending
   perplexity: pending
+  claude_seo_runtime: setup_required
 
 permissions:
   research: allowed

@@ -1,0 +1,58 @@
+version: 1
+policy: client-safe-read-only-default
+extensions: disabled
+allowed_scripts:
+  - agent_ux_check.py
+  - analyze_visual.py
+  - bing_webmaster.py
+  - capture_screenshot.py
+  - commoncrawl_graph.py
+  - consistency_check.py
+  - content_humanize.py
+  - content_quality.py
+  - content_verify.py
+  - crux_history.py
+  - dataforseo_costs.py
+  - dataforseo_normalize.py
+  - domain_history.py
+  - drift_baseline.py
+  - drift_compare.py
+  - drift_history.py
+  - drift_report.py
+  - fetch_page.py
+  - ga4_report.py
+  - gbp_deprecation_lint.py
+  - google_report.py
+  - gsc_inspect.py
+  - gsc_query.py
+  - keyword_planner.py
+  - lcp_subparts.py
+  - moz_api.py
+  - nlp_analyze.py
+  - pagespeed_check.py
+  - parasite_risk.py
+  - parse_html.py
+  - portability_check.py
+  - preload_check.py
+  - render_page.py
+  - runtime.py
+  - schema_ecommerce_validate.py
+  - schema_generate.py
+  - seo_updates.py
+  - sitemap_discovery.py
+  - ucp_check.py
+  - url_safety.py
+  - validate_backlink_report.py
+  - verify_backlinks.py
+  - youtube_search.py
+disabled_scripts:
+  backlinks_auth.py: credential_setup
+  dataforseo_merchant.py: paid_api
+  google_auth.py: credential_setup
+  indexing_notify.py: external_mutation
+  indexnow_submit.py: external_mutation
+  iptc_ai_label.py: local_source_mutation
+  release_sign.py: maintainer_only
+  sync_flow.py: unpinned_remote_update
+  unlighthouse_run.py: dynamic_npx_execution
+  verify_release.py: maintainer_only

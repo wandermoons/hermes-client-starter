@@ -1,6 +1,6 @@
 name: dwight
-version: 0.1.2
-description: "Agent Hermes SEO/GEO, contenu, recherche et opérations WordPress pour entreprises de services"
+version: 0.1.3
+description: "Agent Hermes SEO/GEO client-safe avec Claude SEO v2.2.4, contenu, recherche et opérations WordPress"
 hermes_requires: ">=0.12.0"
 author: "Wander Labs"
 license: "Proprietary"
@@ -38,3 +38,7 @@ distribution_owned:
   - skills/dwight-seo-internal-linking/
   - skills/dwight-wordpress-safe-operations/
   - skills/dwight-brand-voice-extraction/
+  - skills/dwight-claude-seo/
+  - skills/dwight-claude-seo-fanout/
+  - skills/dwight-claude-seo-agents/
+  - skills/claude-seo-upstream/
