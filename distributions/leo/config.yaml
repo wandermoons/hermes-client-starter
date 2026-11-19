@@ -1,0 +1,30 @@
+toolsets:
+  - hermes-cli
+
+agent:
+  max_turns: 120
+  gateway_timeout: 1200
+  tool_use_enforcement: auto
+  task_completion_guidance: true
+  reasoning_effort: medium
+
+terminal:
+  backend: local
+  cwd: .
+  timeout: 180
+  persistent_shell: true
+
+compression:
+  enabled: true
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_last_n: 20
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+
+display:
+  language: fr
+  show_reasoning: false
+  streaming: true

@@ -1,0 +1,42 @@
+{
+  "sector": "independent professional services",
+  "zone": "Example Region",
+  "target_count": 2,
+  "target_notion_database": "database-placeholder",
+  "candidates": [
+    {
+      "company_name": "Acme Studio",
+      "website": "https://WWW.Acme.Example/services/?ref=directory",
+      "phone": "+1 (555) 010-1000",
+      "source_urls": ["https://directory.example/acme"]
+    },
+    {
+      "company_name": "ACME Studio",
+      "website": "http://acme.example/",
+      "phone": "+1 555 010 1000",
+      "source_urls": ["https://directory.example/acme-duplicate"]
+    },
+    {
+      "company_name": "Existing Works",
+      "website": "https://www.existing.example/contact",
+      "source_urls": ["https://directory.example/existing"]
+    },
+    {
+      "company_name": "No Site Company",
+      "website": "",
+      "phone": "+1 555 010 2000",
+      "source_urls": ["https://directory.example/no-site"]
+    },
+    {
+      "company_name": "Birch Partners",
+      "website": "birch.example/about",
+      "source_urls": ["https://directory.example/birch"]
+    }
+  ],
+  "existing_records": [
+    {
+      "company_name": "Existing Works",
+      "website": "http://existing.example"
+    }
+  ]
+}

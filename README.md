@@ -4,6 +4,7 @@ Starter public pour déployer un environnement Hermes client composé de :
 
 - un profil principal `default` configuré comme orchestrateur ;
 - une distribution locale `dwight` spécialisée SEO/GEO, contenu, recherche et WordPress ;
+- une distribution locale optionnelle `leo` spécialisée en sourcing B2B flexible et client-safe ;
 - un onboarding progressif qui conserve les secrets et données client hors de GitHub.
 
 ## Installation
@@ -14,7 +15,13 @@ cd hermes-client-starter
 ./install.sh
 ```
 
-Le script installe Dwight depuis `distributions/dwight/`. Aucun token GitHub, second clone ou accès à un dépôt privé n’est nécessaire.
+Sans argument, le script installe Dwight depuis `distributions/dwight/`. Pour installer Léo uniquement :
+
+```bash
+./install.sh leo
+```
+
+L’installateur Léo ne modifie pas le profil `default`, ne configure aucune connexion externe et n’appelle ni Notion ni Instantly. Aucun token GitHub, second clone ou accès à un dépôt privé n’est nécessaire.
 
 ## Capacités Dwight v0.1.3
 
@@ -119,3 +126,19 @@ Version `0.1.3-rc1` — Dwight Core + Claude SEO client-safe. Release candidate 
 Le code propre au starter et les adaptations Wander Labs restent soumis aux conditions indiquées par le dépôt. Les fichiers dérivés de `AgriciDaniel/claude-seo` restent sous licence MIT ; leur attribution, version, commit et copie de licence sont conservés sous `integrations/claude-seo/`.
 
 Code visible publiquement, tous droits réservés à Wander Labs hors composants tiers explicitement licenciés. Utilisation autorisée pour les installations et clients approuvés par Wander Labs.
+
+## Distribution optionnelle Léo v0.1.0
+
+La distribution générique de sourcing `distributions/leo/` est installable localement avec :
+
+```bash
+./install.sh leo
+```
+
+Elle reste optionnelle. L’installation est propre au profil `leo`, n’écrit pas dans Notion, ne contacte pas Instantly et ne lance aucune campagne. Les connexions sont réalisées séparément par le client pendant l’onboarding. Une réexécution sur la même version est idempotente ; une mise à jour de version est refusée tant qu’une migration revue n’est pas fournie.
+
+Commande exacte de vérification locale :
+
+```bash
+python3 -m unittest discover -s tests -p 'test_leo_*.py' -v
+```

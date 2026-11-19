@@ -1,0 +1,17 @@
+name: leo
+version: 0.1.0
+description: "Generic, client-safe business sourcing profile with an adaptable Notion pipeline"
+hermes_requires: ">=0.12.0"
+author: "Hermes Client Starter"
+license: "Proprietary"
+
+env_requires: []
+
+distribution_owned:
+  - SOUL.md
+  - config.yaml
+  - distribution.yaml
+  - skills/leo-flexible-sourcing/
+  - skills/leo-notion-pipeline/
+  - skills/leo-instantly-operations/
+  - skills/leo-onboarding/

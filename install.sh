@@ -11,6 +11,35 @@ fail() {
   return 1
 }
 
+SELECTED_DISTRIBUTION="${HERMES_CLIENT_DISTRIBUTION:-dwight}"
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    --distribution)
+      [[ $# -ge 2 ]] || fail 'option --distribution sans valeur.'
+      SELECTED_DISTRIBUTION="$2"
+      shift 2
+      ;;
+    dwight|leo)
+      SELECTED_DISTRIBUTION="$1"
+      shift
+      ;;
+    -h|--help)
+      printf 'Usage : ./install.sh [dwight|leo] | ./install.sh --distribution <dwight|leo>\n'
+      exit 0
+      ;;
+    *) fail "distribution inconnue : $1" ;;
+  esac
+fi
+[[ $# -eq 0 ]] || fail 'arguments supplémentaires inattendus.'
+
+case "$SELECTED_DISTRIBUTION" in
+  leo)
+    exec "$SCRIPT_DIR/scripts/install_leo.sh"
+    ;;
+  dwight) ;;
+  *) fail "distribution inconnue : $SELECTED_DISTRIBUTION" ;;
+esac
+
 command -v hermes >/dev/null 2>&1 || fail 'la commande hermes est introuvable.'
 
 # Refuser un HERMES_HOME traversant un lien symbolique avant le premier appel
